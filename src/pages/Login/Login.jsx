@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
@@ -6,18 +6,24 @@ import { AuthContext } from "../../AuthProvider/AuthProvider";
 
 const Login = () => {
     const { signIn } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+    console.log(location);
 
     const handleLogin = e => {
         e.preventDefault();
         console.log(e.currentTarget);
         const form = new FormData(e.currentTarget);
-        console.log(form);
-        console.log(form.get('password'));
+        // console.log(form);
+        // console.log(form.get('password'));
         const email = form.get('email');
         const password = form.get('password');
 
         signIn(email, password)
-            .then(res => console.log(res.user))
+            .then(res => {
+                console.log(res.user);
+                navigate(location?.state ? location.state : '/');
+            })
             .catch(error => console.log(error))
 
     }
@@ -37,7 +43,7 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Email</span>
                             </label>
-                            <input type="email" placeholder="email" name="name" className="input input-bordered" required />
+                            <input type="email" placeholder="email" name="email" className="input input-bordered" required />
                         </div>
                         <div className="form-control">
                             <label className="label">
